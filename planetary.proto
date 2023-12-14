@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package planetary;
+
+message Init {
+  uint64 GameID = 1;
+  string PlayerID = 2;
+}
+
+message WrappedPacket {
+  bytes Packet = 1;
+  Init Init= 2;
+}
+
+message Position {
+  double X = 1;
+  double Y = 2;
+  double Z = 3;
+}
+
+message UpdateEntity {
+  string EntityID = 1;
+  double X = 2;
+  double Y = 3;
+  double Z = 4;
+  bytes Data = 5;
+  string Type = 6;
+}
+
+message DeleteEntity {
+  string EntityID = 1;
+}
+
+message Packet {
+  Position Move = 1; // client side or server side (forces teleport if sent serverside)
+  UpdateEntity Update = 2; // server side
+  DeleteEntity Delete = 3; // server side
+  bool Leave = 4; // client side or server side (forces disconnect if sent serverside)
+  string Arbitrary = 5; // client side
+  string Event = 6; // server side
+}
+
+message Login {
+  string Token = 1;
+  uint64 GameID = 2;
+  string UUID = 3;
+  // optionally use these instead of token
+  string Email = 4;
+  string Password = 5;
+}

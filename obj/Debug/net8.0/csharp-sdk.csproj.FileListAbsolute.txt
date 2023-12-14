@@ -1,0 +1,17 @@
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.GeneratedMSBuildEditorConfig.editorconfig
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.AssemblyInfoInputs.cache
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.AssemblyInfo.cs
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.csproj.CoreCompileInputs.cache
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/csharp-sdk
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/csharp-sdk.deps.json
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/csharp-sdk.runtimeconfig.json
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/csharp-sdk.dll
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/csharp-sdk.pdb
+/home/sam/devel/planetary/csharp-sdk/bin/Debug/net8.0/Google.Protobuf.dll
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.csproj.AssemblyReference.cache
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.csproj.CopyComplete
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.dll
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/refint/csharp-sdk.dll
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.pdb
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/csharp-sdk.genruntimeconfig.cache
+/home/sam/devel/planetary/csharp-sdk/obj/Debug/net8.0/ref/csharp-sdk.dll
