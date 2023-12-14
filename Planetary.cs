@@ -31,7 +31,7 @@ namespace Planetary {
             "XQoMVXBkYXRlRW50aXR5EhAKCEVudGl0eUlEGAEgASgJEgkKAVgYAiABKAES",
             "CQoBWRgDIAEoARIJCgFaGAQgASgBEgwKBERhdGEYBSABKAwSDAoEVHlwZRgG",
             "IAEoCSIgCgxEZWxldGVFbnRpdHkSEAoIRW50aXR5SUQYASABKAkirgEKBlBh",
-            "Y2tldBIhCgRNb3ZlGAEgASgLMhMucGxhbmV0YXJ5LlBvc2l0aW9uEicKBlVw",
+            "Y2tldBIhCgRKb2luGAEgASgLMhMucGxhbmV0YXJ5LlBvc2l0aW9uEicKBlVw",
             "ZGF0ZRgCIAEoCzIXLnBsYW5ldGFyeS5VcGRhdGVFbnRpdHkSJwoGRGVsZXRl",
             "GAMgASgLMhcucGxhbmV0YXJ5LkRlbGV0ZUVudGl0eRINCgVMZWF2ZRgEIAEo",
             "CBIRCglBcmJpdHJhcnkYBSABKAkSDQoFRXZlbnQYBiABKAkiVQoFTG9naW4S",
@@ -45,7 +45,7 @@ namespace Planetary {
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Position), global::Planetary.Position.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.UpdateEntity), global::Planetary.UpdateEntity.Parser, new[]{ "EntityID", "X", "Y", "Z", "Data", "Type" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.DeleteEntity), global::Planetary.DeleteEntity.Parser, new[]{ "EntityID" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Packet), global::Planetary.Packet.Parser, new[]{ "Move", "Update", "Delete", "Leave", "Arbitrary", "Event" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Packet), global::Planetary.Packet.Parser, new[]{ "Join", "Update", "Delete", "Leave", "Arbitrary", "Event" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Login), global::Planetary.Login.Parser, new[]{ "Token", "GameID", "UUID", "Email", "Password" }, null, null, null)
           }));
     }
@@ -981,7 +981,7 @@ namespace Planetary {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Packet(Packet other) : this() {
-      move_ = other.move_ != null ? other.move_.Clone() : null;
+      join_ = other.join_ != null ? other.join_.Clone() : null;
       update_ = other.update_ != null ? other.update_.Clone() : null;
       delete_ = other.delete_ != null ? other.delete_.Clone() : null;
       leave_ = other.leave_;
@@ -995,17 +995,14 @@ namespace Planetary {
       return new Packet(this);
     }
 
-    /// <summary>Field number for the "Move" field.</summary>
-    public const int MoveFieldNumber = 1;
-    private global::Planetary.Position move_;
-    /// <summary>
-    /// client side or server side (forces teleport if sent serverside)
-    /// </summary>
+    /// <summary>Field number for the "Join" field.</summary>
+    public const int JoinFieldNumber = 1;
+    private global::Planetary.Position join_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Planetary.Position Move {
-      get { return move_; }
+    public global::Planetary.Position Join {
+      get { return join_; }
       set {
-        move_ = value;
+        join_ = value;
       }
     }
 
@@ -1092,7 +1089,7 @@ namespace Planetary {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Move, other.Move)) return false;
+      if (!object.Equals(Join, other.Join)) return false;
       if (!object.Equals(Update, other.Update)) return false;
       if (!object.Equals(Delete, other.Delete)) return false;
       if (Leave != other.Leave) return false;
@@ -1104,7 +1101,7 @@ namespace Planetary {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (move_ != null) hash ^= Move.GetHashCode();
+      if (join_ != null) hash ^= Join.GetHashCode();
       if (update_ != null) hash ^= Update.GetHashCode();
       if (delete_ != null) hash ^= Delete.GetHashCode();
       if (Leave != false) hash ^= Leave.GetHashCode();
@@ -1123,9 +1120,9 @@ namespace Planetary {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (move_ != null) {
+      if (join_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(Move);
+        output.WriteMessage(Join);
       }
       if (update_ != null) {
         output.WriteRawTag(18);
@@ -1155,8 +1152,8 @@ namespace Planetary {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (move_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Move);
+      if (join_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Join);
       }
       if (update_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Update);
@@ -1184,11 +1181,11 @@ namespace Planetary {
       if (other == null) {
         return;
       }
-      if (other.move_ != null) {
-        if (move_ == null) {
-          move_ = new global::Planetary.Position();
+      if (other.join_ != null) {
+        if (join_ == null) {
+          join_ = new global::Planetary.Position();
         }
-        Move.MergeFrom(other.Move);
+        Join.MergeFrom(other.Join);
       }
       if (other.update_ != null) {
         if (update_ == null) {
@@ -1223,10 +1220,10 @@ namespace Planetary {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (move_ == null) {
-              move_ = new global::Planetary.Position();
+            if (join_ == null) {
+              join_ = new global::Planetary.Position();
             }
-            input.ReadMessage(move_);
+            input.ReadMessage(join_);
             break;
           }
           case 18: {

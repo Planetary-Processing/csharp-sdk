@@ -32,7 +32,7 @@ message DeleteEntity {
 }
 
 message Packet {
-  Position Move = 1; // client side or server side (forces teleport if sent serverside)
+  Position Join = 1;
   UpdateEntity Update = 2; // server side
   DeleteEntity Delete = 3; // server side
   bool Leave = 4; // client side or server side (forces disconnect if sent serverside)
