@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using Google.Protobuf;
+using System.Threading;
 using System.Threading.Channels;
 
 namespace Planetary {
@@ -15,6 +16,7 @@ namespace Planetary {
     private Thread thread;
     private Action<string> onEvent;
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
+    private Mutex m = new Mutex();
 
     public SDK(ulong gameid, string token, Action<string> callback) {
       onEvent = callback;
@@ -55,8 +57,18 @@ namespace Planetary {
     }
 
     private void send(Packet packet) {
-      Byte[] bts = encodePacket(packet);
-      stream.Write(bts, 0, bts.Length);
+      m.WaitOne();
+      try {
+        Byte[] bts = encodePacket(packet);
+        stream.Write(bts, 0, bts.Length);
+      } catch (Exception e) {
+        Console.WriteLine(e.ToString());
+        if (sr != null) {
+          sr.Dispose();
+        }
+      } finally {
+        m.ReleaseMutex();
+      }
     }
 
     private void recv() {
