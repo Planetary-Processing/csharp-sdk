@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using Google.Protobuf;
+using System.Threading.Channels;
 
 namespace Planetary {
   public class SDK {
@@ -13,6 +14,7 @@ namespace Planetary {
     private StreamReader sr = null;
     private Thread thread;
     private Action<string> onEvent;
+    private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
 
     public SDK(ulong gameid, string token, Action<string> callback) {
       onEvent = callback;
@@ -41,8 +43,11 @@ namespace Planetary {
       }
     }
 
-    public void Update(double dt) {
-
+    public void Update() {
+      Packet pckt;
+      while (channel.Reader.TryRead(out pckt)) {
+        Console.WriteLine(pckt);
+      }
     }
 
     public void Message(Dictionary<String, dynamic> msg) {
@@ -59,7 +64,9 @@ namespace Planetary {
         while (true) {
           string line;
           while ((line = sr.ReadLine()) != null) {
-            Console.WriteLine(decodePacket(line));
+            if (!channel.Writer.TryWrite(decodePacket(line))) {
+              throw new Exception("lol");
+            }
           }
         }
       } catch (Exception e) {
