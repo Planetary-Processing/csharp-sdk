@@ -4,6 +4,6 @@ var token = r.ReadLine();
 var sdk = new Planetary.SDK(1, token, s => Console.WriteLine(s));
 
 while (true) {
-  Thread.Sleep(1000);
+  Thread.Sleep(1000/60);
   sdk.Update();
 }

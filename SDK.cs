@@ -8,6 +8,14 @@ using System.Threading;
 using System.Threading.Channels;
 
 namespace Planetary {
+  public class Entity {
+    public double x;
+    public double y;
+    public double z;
+    public Byte[] data;
+    public string type;
+  }
+
   public class SDK {
 
     private string UUID;
@@ -17,6 +25,7 @@ namespace Planetary {
     private Action<string> onEvent;
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
     private Mutex m = new Mutex();
+    private Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
 
     public SDK(ulong gameid, string token, Action<string> callback) {
       onEvent = callback;
@@ -34,9 +43,13 @@ namespace Planetary {
         string line = sr.ReadLine();
         Login uuid = decodeLogin(line);
         UUID = uuid.UUID;
-        Console.WriteLine(UUID);
+        Console.WriteLine("Joined with UUID: " + UUID);
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
+        Thread.Sleep(1000);
+        send(new Packet{
+          Join = new Position{X=0, Y=0, Z=0}
+        });
       } catch (Exception e) {
         Console.WriteLine(e.ToString());
         if (sr != null) {
@@ -48,12 +61,38 @@ namespace Planetary {
     public void Update() {
       Packet pckt;
       while (channel.Reader.TryRead(out pckt)) {
-        Console.WriteLine(pckt);
+        handlePacket(pckt);
+      }
+      Console.WriteLine(entities.Count());
+    }
+
+    private void handlePacket(Packet packet) {
+      if (packet.Update != null) {
+        Entity e = null;
+        if (entities.TryGetValue(packet.Update.EntityID, out e)) {
+          e.x = packet.Update.X;
+          e.y = packet.Update.Y;
+          e.z = packet.Update.Z;
+          e.data = packet.Update.Data.ToByteArray();
+          e.type = packet.Update.Type;
+        } else {
+          entities.Add(packet.Update.EntityID, new Entity{
+            x = packet.Update.X,
+            y = packet.Update.Y,
+            z = packet.Update.Z,
+            data = packet.Update.Data.ToByteArray(),
+            type = packet.Update.Type
+          });
+        }
+      }
+      if (packet.Delete != null) {
+        entities.Remove(packet.Delete.EntityID);
       }
     }
 
     public void Message(Dictionary<String, dynamic> msg) {
-      Console.WriteLine(JsonSerializer.Serialize(msg));
+      var s = JsonSerializer.Serialize(msg);
+      send(new Packet{Arbitrary = s});
     }
 
     private void send(Packet packet) {
