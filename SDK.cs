@@ -9,11 +9,11 @@ using System.Threading.Channels;
 
 namespace Planetary {
   public class Entity {
-    public double x;
-    public double y;
-    public double z;
-    public Byte[] data;
-    public string type;
+    public double x { get; internal set; }
+    public double y { get; internal set; }
+    public double z { get; internal set; }
+    public Byte[] data { get; internal set; }
+    public string type { get; internal set; }
   }
 
   public class SDK {
