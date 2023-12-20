@@ -9,6 +9,7 @@ using System.Threading.Channels;
 
 namespace Planetary {
   public class Entity {
+    public string id { get; internal set; }
     public double x { get; internal set; }
     public double y { get; internal set; }
     public double z { get; internal set; }
@@ -18,21 +19,36 @@ namespace Planetary {
 
   public class SDK {
 
-    private string UUID;
+    private readonly string UUID;
     private NetworkStream stream = null;
     private StreamReader sr = null;
     private Thread thread;
-    private Action<string> onEvent;
+    private Action<Dictionary<string, dynamic>> onEvent;
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
     private Mutex m = new Mutex();
-    private Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
+    public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
 
-    public SDK(ulong gameid, string token, Action<string> callback) {
-      onEvent = callback;
+    public SDK(ulong gameid, string token, Action<Dictionary<string, dynamic>> callback) {
       var login = new Login {
         Token = token,
         GameID = gameid
       };
+      onEvent = callback;
+      init(login);
+    }
+
+    public SDK(ulong gameid, string username, string password, Action<Dictionary<string, dynamic>> callback) {
+      var login = new Login {
+        Email = username,
+        Password = password,
+        GameID = gameid
+      };
+      onEvent = callback;
+      UUID = init(login);
+    }
+
+    private string init(Login login) {
+      string uuid = "";
       try {
         TcpClient socket = new TcpClient();
         socket.Connect("planetaryprocessing.io", 42);
@@ -41,9 +57,9 @@ namespace Planetary {
         stream.Write(dat, 0, dat.Length);
         sr = new StreamReader(stream, Encoding.UTF8);
         string line = sr.ReadLine();
-        Login uuid = decodeLogin(line);
-        UUID = uuid.UUID;
-        Console.WriteLine("Joined with UUID: " + UUID);
+        Login resp = decodeLogin(line);
+        uuid = resp.UUID;
+        Console.WriteLine("Joined with UUID: " + uuid);
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
         Thread.Sleep(1000);
@@ -56,6 +72,7 @@ namespace Planetary {
           sr.Dispose();
         }
       }
+      return uuid;
     }
 
     public void Update() {
@@ -77,6 +94,7 @@ namespace Planetary {
           e.type = packet.Update.Type;
         } else {
           entities.Add(packet.Update.EntityID, new Entity{
+            id = packet.Update.EntityID,
             x = packet.Update.X,
             y = packet.Update.Y,
             z = packet.Update.Z,
@@ -148,6 +166,10 @@ namespace Planetary {
     private static Byte[] encodePacket(Packet p) {
       return Encoding.UTF8.GetBytes(
         System.Convert.ToBase64String(p.ToByteArray()) + "\n");
+    }
+
+    private static Dictionary<String, dynamic> decodeEvent(string e) {
+      return JsonSerializer.Deserialize<Dictionary<String, dynamic>>(e);
     }
   }
 }
