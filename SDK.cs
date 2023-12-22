@@ -9,17 +9,18 @@ using System.Threading.Channels;
 
 namespace Planetary {
   public class Entity {
-    public string id { get; internal set; }
-    public double x { get; internal set; }
-    public double y { get; internal set; }
-    public double z { get; internal set; }
-    public Byte[] data { get; internal set; }
-    public string type { get; internal set; }
+    public string id;
+    public double x;
+    public double y;
+    public double z;
+    public Byte[] data;
+    public string type;
   }
 
   public class SDK {
 
-    private readonly string UUID;
+    private ulong gameID;
+    public string UUID;
     private NetworkStream stream = null;
     private StreamReader sr = null;
     private Thread thread;
@@ -29,21 +30,27 @@ namespace Planetary {
     public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
 
     public SDK(ulong gameid, string token, Action<Dictionary<string, dynamic>> callback) {
-      var login = new Login {
-        Token = token,
-        GameID = gameid
-      };
-      onEvent = callback;
-      init(login);
+      gameID = gameid;
     }
 
-    public SDK(ulong gameid, string username, string password, Action<Dictionary<string, dynamic>> callback) {
+    public SDK(ulong gameid) {
+      gameID = gameid;
+    }
+
+    public void Connect(string username, string password) {
       var login = new Login {
         Email = username,
         Password = password,
-        GameID = gameid
+        GameID = gameID
       };
-      onEvent = callback;
+
+    }
+
+    public void Connect(string token) {
+      var login = new Login {
+        Token = token,
+        GameID = gameID
+      };
       UUID = init(login);
     }
 
@@ -59,7 +66,6 @@ namespace Planetary {
         string line = sr.ReadLine();
         Login resp = decodeLogin(line);
         uuid = resp.UUID;
-        Console.WriteLine("Joined with UUID: " + uuid);
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
         Thread.Sleep(1000);
@@ -67,10 +73,10 @@ namespace Planetary {
           Join = new Position{X=0, Y=0, Z=0}
         });
       } catch (Exception e) {
-        Console.WriteLine(e.ToString());
         if (sr != null) {
           sr.Dispose();
         }
+        throw e;
       }
       return uuid;
     }
@@ -80,7 +86,6 @@ namespace Planetary {
       while (channel.Reader.TryRead(out pckt)) {
         handlePacket(pckt);
       }
-      Console.WriteLine(entities.Count());
     }
 
     private void handlePacket(Packet packet) {
@@ -119,10 +124,10 @@ namespace Planetary {
         Byte[] bts = encodePacket(packet);
         stream.Write(bts, 0, bts.Length);
       } catch (Exception e) {
-        Console.WriteLine(e.ToString());
         if (sr != null) {
           sr.Dispose();
         }
+        throw e;
       } finally {
         m.ReleaseMutex();
       }
@@ -139,10 +144,10 @@ namespace Planetary {
           }
         }
       } catch (Exception e) {
-        Console.WriteLine(e.ToString());
         if (sr != null) {
           sr.Dispose();
         }
+        throw e;
       }
     }
 
