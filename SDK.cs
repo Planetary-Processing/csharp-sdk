@@ -43,7 +43,7 @@ namespace Planetary {
         Password = password,
         GameID = gameID
       };
-
+      UUID = init(login);
     }
 
     public void Connect(string token) {
