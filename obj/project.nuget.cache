@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3y/RkE6euYGDLFznWV4IiHU9sRZrNf9161utmS7mat00j+gcmezlu2as3m+oLn03SO724GX1cNBZprYWb+yObg==",
+  "dgSpecHash": "W33kNSzvaQ7HzmOWK91I4VGthBN7uJXdeyJjlbVcTmyhFYSxfhGGq/K/DVv+2/rACfIQ9lYf0ZH2O7/OzN0MFA==",
   "success": true,
   "projectFilePath": "/home/sam/devel/planetary/csharp-sdk/csharp-sdk.csproj",
   "expectedPackageFiles": [

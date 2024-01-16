@@ -20,6 +20,7 @@ namespace Planetary {
   public class SDK {
 
     private ulong gameID;
+    private bool connected = false;
     public string UUID;
     private NetworkStream stream = null;
     private StreamReader sr = null;
@@ -72,10 +73,12 @@ namespace Planetary {
         send(new Packet{
           Join = new Position{X=0, Y=0, Z=0}
         });
+        connected = true;
       } catch (Exception e) {
         if (sr != null) {
           sr.Dispose();
         }
+        connected = false;
         throw e;
       }
       return uuid;
@@ -113,6 +116,10 @@ namespace Planetary {
       }
     }
 
+    public bool IsConnected() {
+      return connected;
+    }
+
     public void Message(Dictionary<String, dynamic> msg) {
       var s = JsonSerializer.Serialize(msg);
       send(new Packet{Arbitrary = s});
@@ -127,6 +134,7 @@ namespace Planetary {
         if (sr != null) {
           sr.Dispose();
         }
+        connected = false;
         throw e;
       } finally {
         m.ReleaseMutex();
@@ -139,7 +147,7 @@ namespace Planetary {
           string line;
           while ((line = sr.ReadLine()) != null) {
             if (!channel.Writer.TryWrite(decodePacket(line))) {
-              throw new Exception("lol");
+              throw new Exception("failed to write packet");
             }
           }
         }
@@ -147,6 +155,7 @@ namespace Planetary {
         if (sr != null) {
           sr.Dispose();
         }
+        connected = false;
         throw e;
       }
     }
