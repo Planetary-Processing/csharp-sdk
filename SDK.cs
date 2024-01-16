@@ -147,7 +147,7 @@ namespace Planetary {
           string line;
           while ((line = sr.ReadLine()) != null) {
             if (!channel.Writer.TryWrite(decodePacket(line))) {
-              throw new Exception("failed to write packet");
+              throw new Exception("failed to read packet");
             }
           }
         }
