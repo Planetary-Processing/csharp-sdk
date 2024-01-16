@@ -135,7 +135,6 @@ namespace Planetary {
           sr.Dispose();
         }
         connected = false;
-        throw e;
       } finally {
         m.ReleaseMutex();
       }
@@ -156,7 +155,6 @@ namespace Planetary {
           sr.Dispose();
         }
         connected = false;
-        throw e;
       }
     }
 
