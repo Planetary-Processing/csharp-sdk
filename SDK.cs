@@ -126,7 +126,11 @@ namespace Planetary {
     }
 
     private void send(Packet packet) {
+      if ( connected == false ) {
+         throw new Exception("send called before connection is established");
+      }
       m.WaitOne();
+      // perhaps an automatic re-init would be useful here
       try {
         Byte[] bts = encodePacket(packet);
         stream.Write(bts, 0, bts.Length);
