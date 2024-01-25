@@ -58,9 +58,11 @@ namespace Planetary {
     private string init(Login login) {
       string uuid = "";
       try {
-        TcpClient socket = new TcpClient();
-        socket.Connect("planetaryprocessing.io", 42);
-        stream = socket.GetStream();
+        IPHostEntry ipHostInfo = Dns.GetHostEntry("planetaryprocessing.io");
+        IPAddress ipAddress = ipHostInfo.AddressList[0];
+        Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        socket.Connect(ipAddress, 42);
+        stream = new NetworkStream(socket);
         Byte[] dat = encodeLogin(login);
         stream.Write(dat, 0, dat.Length);
         sr = new StreamReader(stream, Encoding.UTF8);
