@@ -6,6 +6,7 @@ using System.Text.Json;
 using Google.Protobuf;
 using System.Threading;
 using System.Threading.Channels;
+using RC4Cryptography;
 
 namespace Planetary {
   public class Entity {
@@ -29,6 +30,8 @@ namespace Planetary {
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
     private Mutex m = new Mutex();
     public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
+    private RC4 inp = new RC4(Encoding.UTF8.GetBytes("guacamole"));
+    private RC4 oup = new RC4(Encoding.UTF8.GetBytes("guacamole"));
 
     public SDK(ulong gameid, string token, Action<Dictionary<string, dynamic>> callback) {
       gameID = gameid;
@@ -58,10 +61,10 @@ namespace Planetary {
     private string init(Login login) {
       string uuid = "";
       try {
-        IPHostEntry ipHostInfo = Dns.GetHostEntry("planetaryprocessing.io");
+        IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
         IPAddress ipAddress = ipHostInfo.AddressList[0];
         Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(ipAddress, 42);
+        socket.Connect(ipAddress, 4101);
         stream = new NetworkStream(socket);
         Byte[] dat = encodeLogin(login);
         stream.Write(dat, 0, dat.Length);
@@ -164,29 +167,30 @@ namespace Planetary {
       }
     }
 
-    private static Login decodeLogin(string s) {
+    private Login decodeLogin(string s) {
       Byte[] bts = System.Convert.FromBase64String(s);
       Login pckt = Login.Parser.ParseFrom(bts);
       return pckt;
     }
 
-    private static Packet decodePacket(string s) {
+    private Packet decodePacket(string s) {
       Byte[] bts = System.Convert.FromBase64String(s);
+      bts = inp.Apply(bts);
       Packet pckt = Packet.Parser.ParseFrom(bts);
       return pckt;
     }
 
-    private static Byte[] encodeLogin(Login l) {
+    private Byte[] encodeLogin(Login l) {
       return Encoding.UTF8.GetBytes(
         System.Convert.ToBase64String(l.ToByteArray()) + "\n");
     }
 
-    private static Byte[] encodePacket(Packet p) {
+    private Byte[] encodePacket(Packet p) {
       return Encoding.UTF8.GetBytes(
-        System.Convert.ToBase64String(p.ToByteArray()) + "\n");
+        System.Convert.ToBase64String(oup.Apply(p.ToByteArray())) + "\n");
     }
 
-    private static Dictionary<String, dynamic> decodeEvent(string e) {
+    private Dictionary<String, dynamic> decodeEvent(string e) {
       return JsonSerializer.Deserialize<Dictionary<String, dynamic>>(e);
     }
   }
