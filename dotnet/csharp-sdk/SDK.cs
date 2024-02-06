@@ -75,10 +75,10 @@ namespace Planetary {
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
         Thread.Sleep(1000);
+        connected = true;
         send(new Packet{
           Join = new Position{X=0, Y=0, Z=0}
         });
-        connected = true;
       } catch (Exception e) {
         if (sr != null) {
           sr.Dispose();
