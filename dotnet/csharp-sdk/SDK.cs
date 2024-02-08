@@ -105,6 +105,19 @@ namespace Planetary {
       }
     }
 
+    public bool IsConnected() {
+      return connected;
+    }
+
+    public void Message(Dictionary<String, dynamic> msg) {
+      var s = JsonSerializer.Serialize(msg);
+      send(new Packet{Arbitrary = s});
+    }
+
+    public void Logout() {
+      send(new Packet{Leave = true});
+    }
+
     private void handlePacket(Packet packet) {
       if (packet.Update != null) {
         Entity e = null;
@@ -128,15 +141,6 @@ namespace Planetary {
       if (packet.Delete != null) {
         entities.Remove(packet.Delete.EntityID);
       }
-    }
-
-    public bool IsConnected() {
-      return connected;
-    }
-
-    public void Message(Dictionary<String, dynamic> msg) {
-      var s = JsonSerializer.Serialize(msg);
-      send(new Packet{Arbitrary = s});
     }
 
     private void send(Packet packet) {
