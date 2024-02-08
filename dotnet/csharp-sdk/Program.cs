@@ -6,7 +6,6 @@ var token = r.ReadLine();
 var sdk = new SDK(1);
 sdk.Connect("username", "pw");
 while (sdk.IsConnected()) {
-  Console.WriteLine("...");
   Thread.Sleep(1000/60);
   sdk.Update();
 }

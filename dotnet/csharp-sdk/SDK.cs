@@ -1,5 +1,7 @@
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -30,8 +32,8 @@ namespace Planetary {
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
     private Mutex m = new Mutex();
     public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
-    private RC4 inp = new RC4(Encoding.UTF8.GetBytes("guacamole"));
-    private RC4 oup = new RC4(Encoding.UTF8.GetBytes("guacamole"));
+    private RC4 inp;
+    private RC4 oup;
 
     public SDK(ulong gameid, string token, Action<Dictionary<string, dynamic>> callback) {
       gameID = gameid;
@@ -50,21 +52,27 @@ namespace Planetary {
       UUID = init(login);
     }
 
-    public void Connect(string token) {
-      var login = new Login {
-        Token = token,
-        GameID = gameID
-      };
-      UUID = init(login);
-    }
-
     private string init(Login login) {
       string uuid = "";
       try {
-        IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
+        var body = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new {GameID = login.GameID, Username = login.Email, Password = login.Password})));
+        HttpClient client = new HttpClient();
+        client.BaseAddress = new Uri("https://api.planetaryprocessing.io/");
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        HttpResponseMessage response = client.PostAsync("/_api/golang.planetaryprocessing.io/apis/httputils/HTTPUtils/GetKey", body).Result;
+        Byte[] key;
+        if (response.IsSuccessStatusCode) {
+          Dictionary<String, String> data = JsonSerializer.Deserialize<Dictionary<String, String>>(response.Content.ReadAsStringAsync().Result);
+          key = System.Convert.FromBase64String(data["Key"]);
+        } else {
+          throw new Exception("countn't get key, auth request failed");
+        }
+        inp = new RC4(key);
+        oup = new RC4(key);
+        IPHostEntry ipHostInfo = Dns.GetHostEntry("planetaryprocessing.io");
         IPAddress ipAddress = ipHostInfo.AddressList[0];
         Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(ipAddress, 4101);
+        socket.Connect(ipAddress, 42);
         stream = new NetworkStream(socket);
         Byte[] dat = encodeLogin(login);
         stream.Write(dat, 0, dat.Length);
@@ -72,6 +80,7 @@ namespace Planetary {
         string line = sr.ReadLine();
         Login resp = decodeLogin(line);
         uuid = resp.UUID;
+        Console.WriteLine("...");
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
         Thread.Sleep(1000);
