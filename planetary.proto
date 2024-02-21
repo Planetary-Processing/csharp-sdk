@@ -23,7 +23,7 @@ message UpdateEntity {
   double X = 2;
   double Y = 3;
   double Z = 4;
-  bytes Data = 5;
+  string Data = 5;
   string Type = 6;
 }
 

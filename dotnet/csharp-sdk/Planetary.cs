@@ -29,7 +29,7 @@ namespace Planetary {
             "BlBhY2tldBgBIAEoDBIdCgRJbml0GAIgASgLMg8ucGxhbmV0YXJ5LkluaXQi",
             "KwoIUG9zaXRpb24SCQoBWBgBIAEoARIJCgFZGAIgASgBEgkKAVoYAyABKAEi",
             "XQoMVXBkYXRlRW50aXR5EhAKCEVudGl0eUlEGAEgASgJEgkKAVgYAiABKAES",
-            "CQoBWRgDIAEoARIJCgFaGAQgASgBEgwKBERhdGEYBSABKAwSDAoEVHlwZRgG",
+            "CQoBWRgDIAEoARIJCgFaGAQgASgBEgwKBERhdGEYBSABKAkSDAoEVHlwZRgG",
             "IAEoCSIgCgxEZWxldGVFbnRpdHkSEAoIRW50aXR5SUQYASABKAkirgEKBlBh",
             "Y2tldBIhCgRKb2luGAEgASgLMhMucGxhbmV0YXJ5LlBvc2l0aW9uEicKBlVw",
             "ZGF0ZRgCIAEoCzIXLnBsYW5ldGFyeS5VcGRhdGVFbnRpdHkSJwoGRGVsZXRl",
@@ -643,9 +643,9 @@ namespace Planetary {
 
     /// <summary>Field number for the "Data" field.</summary>
     public const int DataFieldNumber = 5;
-    private pb::ByteString data_ = pb::ByteString.Empty;
+    private string data_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pb::ByteString Data {
+    public string Data {
       get { return data_; }
       set {
         data_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
@@ -725,7 +725,7 @@ namespace Planetary {
       }
       if (Data.Length != 0) {
         output.WriteRawTag(42);
-        output.WriteBytes(Data);
+        output.WriteString(Data);
       }
       if (Type.Length != 0) {
         output.WriteRawTag(50);
@@ -752,7 +752,7 @@ namespace Planetary {
         size += 1 + 8;
       }
       if (Data.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Data);
       }
       if (Type.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Type);
@@ -814,7 +814,7 @@ namespace Planetary {
             break;
           }
           case 42: {
-            Data = input.ReadBytes();
+            Data = input.ReadString();
             break;
           }
           case 50: {

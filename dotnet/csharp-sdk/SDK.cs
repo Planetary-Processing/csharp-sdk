@@ -16,7 +16,7 @@ namespace Planetary {
     public double x;
     public double y;
     public double z;
-    public Byte[] data;
+    public Dictionary<string, dynamic> data;
     public string type;
   }
 
@@ -125,7 +125,7 @@ namespace Planetary {
           e.x = packet.Update.X;
           e.y = packet.Update.Y;
           e.z = packet.Update.Z;
-          e.data = packet.Update.Data.ToByteArray();
+          e.data = decodeEvent(packet.Update.Data);
           e.type = packet.Update.Type;
         } else {
           entities.Add(packet.Update.EntityID, new Entity{
@@ -133,7 +133,7 @@ namespace Planetary {
             x = packet.Update.X,
             y = packet.Update.Y,
             z = packet.Update.Z,
-            data = packet.Update.Data.ToByteArray(),
+            data = decodeEvent(packet.Update.Data),
             type = packet.Update.Type
           });
         }
