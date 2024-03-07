@@ -44,18 +44,13 @@ namespace Planetary {
     }
 
     public void Connect(string username, string password) {
-      var login = new Login {
-        Email = username,
-        Password = password,
-        GameID = gameID
-      };
-      UUID = init(login);
+      UUID = init(username, password, gameID);
     }
 
-    private string init(Login login) {
+    private string init(string email, string password, ulong gameID) {
       string uuid = "";
       try {
-        var body = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new {GameID = login.GameID, Username = login.Email, Password = login.Password})));
+        var body = new ByteArrayContent(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new {GameID = gameID, Username = email, Password = password})));
         HttpClient client = new HttpClient();
         client.BaseAddress = new Uri("https://api.planetaryprocessing.io/");
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -64,6 +59,7 @@ namespace Planetary {
         if (response.IsSuccessStatusCode) {
           Dictionary<String, String> data = JsonSerializer.Deserialize<Dictionary<String, String>>(response.Content.ReadAsStringAsync().Result);
           key = System.Convert.FromBase64String(data["Key"]);
+          uuid = data["UUID"];
         } else {
           throw new Exception("countn't get key, auth request failed");
         }
@@ -74,12 +70,18 @@ namespace Planetary {
         Socket socket = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         socket.Connect(ipAddress, 42);
         stream = new NetworkStream(socket);
+        var login = new Login {
+          UUID = uuid,
+          GameID = gameID
+        };
         Byte[] dat = encodeLogin(login);
         stream.Write(dat, 0, dat.Length);
         sr = new StreamReader(stream, Encoding.UTF8);
         string line = sr.ReadLine();
         Login resp = decodeLogin(line);
-        uuid = resp.UUID;
+        if (resp.UUID != uuid) {
+          throw new Exception("auth failed");
+        }
         Console.WriteLine("...");
         thread = new Thread(new ThreadStart(recv));
         thread.Start();

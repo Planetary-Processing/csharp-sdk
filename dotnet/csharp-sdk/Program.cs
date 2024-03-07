@@ -4,7 +4,7 @@ StreamReader r = new StreamReader(Environment.GetEnvironmentVariable("HOME") + "
 var token = r.ReadLine();
 
 var sdk = new SDK(1);
-sdk.Connect("username", "pw");
+sdk.Connect("test", "test");
 while (sdk.IsConnected()) {
   Thread.Sleep(1000/60);
   sdk.Update();
