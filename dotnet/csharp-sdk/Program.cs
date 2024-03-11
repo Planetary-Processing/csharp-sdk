@@ -4,8 +4,12 @@ StreamReader r = new StreamReader(Environment.GetEnvironmentVariable("HOME") + "
 var token = r.ReadLine();
 
 var sdk = new SDK(1);
-sdk.Connect("test", "test");
+sdk.Connect("test", "testsdafasdfsda");
 while (sdk.IsConnected()) {
-  Thread.Sleep(1000/60);
-  sdk.Update();
+    for (int i = 0; i < 5; i++) {
+        sdk.Update();
+        Thread.Sleep(1000/5);        
+    }
+    sdk.Message(new Dictionary<string, dynamic>());
+    Console.WriteLine(sdk.entities.Count);
 }

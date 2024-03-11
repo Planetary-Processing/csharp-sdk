@@ -17,6 +17,7 @@ namespace Planetary {
     public double y;
     public double z;
     public Dictionary<string, dynamic> data;
+    public string dataJSON;
     public string type;
   }
 
@@ -127,6 +128,7 @@ namespace Planetary {
           e.x = packet.Update.X;
           e.y = packet.Update.Y;
           e.z = packet.Update.Z;
+          e.dataJSON = packet.Update.Data;
           e.data = decodeEvent(packet.Update.Data);
           e.type = packet.Update.Type;
         } else {
@@ -135,6 +137,7 @@ namespace Planetary {
             x = packet.Update.X,
             y = packet.Update.Y,
             z = packet.Update.Z,
+            dataJSON = packet.Update.Data,
             data = decodeEvent(packet.Update.Data),
             type = packet.Update.Type
           });
