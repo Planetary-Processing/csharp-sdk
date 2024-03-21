@@ -9,6 +9,8 @@ using Google.Protobuf;
 using System.Threading;
 using System.Threading.Channels;
 using RC4Cryptography;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Planetary {
   public class Entity {
