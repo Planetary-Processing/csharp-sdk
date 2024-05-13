@@ -160,6 +160,7 @@ namespace Planetary {
         Byte[] bts = encodePacket(packet);
         stream.Write(bts, 0, bts.Length);
       } catch (Exception e) {
+        Console.WriteLine(e.ToString());
         if (sr != null) {
           sr.Dispose();
         }
@@ -180,6 +181,7 @@ namespace Planetary {
           }
         }
       } catch (Exception e) {
+        Console.WriteLine(e.ToString());
         if (sr != null) {
           sr.Dispose();
         }
