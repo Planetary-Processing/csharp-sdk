@@ -18,7 +18,7 @@ namespace Planetary {
     public double x;
     public double y;
     public double z;
-    public Dictionary<string, dynamic> data;
+    public Dictionary<string, object> data;
     public string dataJSON;
     public string type;
   }
@@ -31,15 +31,16 @@ namespace Planetary {
     private NetworkStream stream = null;
     private StreamReader sr = null;
     private Thread thread;
-    private Action<Dictionary<string, dynamic>> onEvent;
+    private Action<Chunk> chunkCallback;
     private Channel<Packet> channel = Channel.CreateUnbounded<Packet>();
     private Mutex m = new Mutex();
     public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
     private RC4 inp;
     private RC4 oup;
 
-    public SDK(ulong gameid, string token, Action<Dictionary<string, dynamic>> callback) {
+    public SDK(ulong gameid, Action<Chunk> chunkCallback) {
       gameID = gameid;
+      this.chunkCallback = chunkCallback;
     }
 
     public SDK(ulong gameid) {
@@ -90,9 +91,6 @@ namespace Planetary {
         thread.Start();
         Thread.Sleep(1000);
         connected = true;
-        send(new Packet{
-          Join = new Position{X=0, Y=0, Z=0}
-        });
       } catch (Exception e) {
         if (sr != null) {
           sr.Dispose();
@@ -101,6 +99,12 @@ namespace Planetary {
         throw e;
       }
       return uuid;
+    }
+
+    public void Join() {
+      send(new Packet{
+        Join = new Position{X=0, Y=0, Z=0}
+      });
     }
 
     public void Update() {
@@ -114,7 +118,7 @@ namespace Planetary {
       return connected;
     }
 
-    public void Message(Dictionary<String, dynamic> msg) {
+    public void Message(Dictionary<String, object> msg) {
       var s = JsonSerializer.Serialize(msg);
       send(new Packet{Arbitrary = s});
     }
@@ -147,6 +151,11 @@ namespace Planetary {
       }
       if (packet.Delete != null) {
         entities.Remove(packet.Delete.EntityID);
+      }
+      if (packet.Chunk != null) {
+        if (chunkCallback != null) {
+          chunkCallback.Invoke(packet.Chunk);
+        }
       }
     }
 
@@ -212,8 +221,40 @@ namespace Planetary {
         System.Convert.ToBase64String(oup.Apply(p.ToByteArray())) + "\n");
     }
 
-    private Dictionary<String, dynamic> decodeEvent(string e) {
-      return JsonSerializer.Deserialize<Dictionary<String, dynamic>>(e);
+    private object ConvertToVariant(JsonElement value) {
+      switch (value.ValueKind) {
+        case JsonValueKind.True:
+          return true;
+        case JsonValueKind.False:
+          return false;
+        case JsonValueKind.Number:
+          return value.GetDouble();
+        case JsonValueKind.String:
+          return value.GetString();
+        case JsonValueKind.Object:
+          var gdDict = new Dictionary<string, object>();
+          foreach (var kvp in value.EnumerateObject()) {
+            gdDict[kvp.Name] = ConvertToVariant(kvp.Value);
+          }
+          return gdDict;
+        default:
+          return null;
+          }
+        }
+        
+    private Dictionary<string, object> ConvertToVariantDictionary(Dictionary<string, JsonElement> dict) {
+      var gdDict = new Dictionary<string, object>();
+      foreach (var kvp in dict)
+      {
+        gdDict[kvp.Key] = ConvertToVariant(kvp.Value);
+      }
+      return gdDict;
     }
-  }
+
+
+    private Dictionary<String, object> decodeEvent(string e) {
+        return ConvertToVariantDictionary(JsonSerializer.Deserialize<Dictionary<String, JsonElement>>(e));
+      }
+    }
 }
+
