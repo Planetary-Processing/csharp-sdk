@@ -30,15 +30,16 @@ namespace Planetary {
             "KwoIUG9zaXRpb24SCQoBWBgBIAEoARIJCgFZGAIgASgBEgkKAVoYAyABKAEi",
             "XQoMVXBkYXRlRW50aXR5EhAKCEVudGl0eUlEGAEgASgJEgkKAVgYAiABKAES",
             "CQoBWRgDIAEoARIJCgFaGAQgASgBEgwKBERhdGEYBSABKAkSDAoEVHlwZRgG",
-            "IAEoCSIgCgxEZWxldGVFbnRpdHkSEAoIRW50aXR5SUQYASABKAkiNwoFQ2h1",
-            "bmsSCgoCSUQYASABKAQSDAoERGF0YRgCIAEoCRIJCgFYGAMgASgDEgkKAVkY",
-            "BCABKAMizwEKBlBhY2tldBIhCgRKb2luGAEgASgLMhMucGxhbmV0YXJ5LlBv",
-            "c2l0aW9uEicKBlVwZGF0ZRgCIAEoCzIXLnBsYW5ldGFyeS5VcGRhdGVFbnRp",
-            "dHkSJwoGRGVsZXRlGAMgASgLMhcucGxhbmV0YXJ5LkRlbGV0ZUVudGl0eRIN",
-            "CgVMZWF2ZRgEIAEoCBIRCglBcmJpdHJhcnkYBSABKAkSDQoFRXZlbnQYBiAB",
-            "KAkSHwoFQ2h1bmsYByABKAsyEC5wbGFuZXRhcnkuQ2h1bmsiVQoFTG9naW4S",
-            "DQoFVG9rZW4YASABKAkSDgoGR2FtZUlEGAIgASgEEgwKBFVVSUQYAyABKAkS",
-            "DQoFRW1haWwYBCABKAkSEAoIUGFzc3dvcmQYBSABKAliBnByb3RvMw=="));
+            "IAEoCSIgCgxEZWxldGVFbnRpdHkSEAoIRW50aXR5SUQYASABKAkiPQoLQ2h1",
+            "bmtVcGRhdGUSCgoCSUQYASABKAQSDAoERGF0YRgCIAEoCRIJCgFYGAMgASgD",
+            "EgkKAVkYBCABKAMi1QEKBlBhY2tldBIhCgRKb2luGAEgASgLMhMucGxhbmV0",
+            "YXJ5LlBvc2l0aW9uEicKBlVwZGF0ZRgCIAEoCzIXLnBsYW5ldGFyeS5VcGRh",
+            "dGVFbnRpdHkSJwoGRGVsZXRlGAMgASgLMhcucGxhbmV0YXJ5LkRlbGV0ZUVu",
+            "dGl0eRINCgVMZWF2ZRgEIAEoCBIRCglBcmJpdHJhcnkYBSABKAkSDQoFRXZl",
+            "bnQYBiABKAkSJQoFQ2h1bmsYByABKAsyFi5wbGFuZXRhcnkuQ2h1bmtVcGRh",
+            "dGUiVQoFTG9naW4SDQoFVG9rZW4YASABKAkSDgoGR2FtZUlEGAIgASgEEgwK",
+            "BFVVSUQYAyABKAkSDQoFRW1haWwYBCABKAkSEAoIUGFzc3dvcmQYBSABKAli",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -47,7 +48,7 @@ namespace Planetary {
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Position), global::Planetary.Position.Parser, new[]{ "X", "Y", "Z" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.UpdateEntity), global::Planetary.UpdateEntity.Parser, new[]{ "EntityID", "X", "Y", "Z", "Data", "Type" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.DeleteEntity), global::Planetary.DeleteEntity.Parser, new[]{ "EntityID" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Chunk), global::Planetary.Chunk.Parser, new[]{ "ID", "Data", "X", "Y" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.ChunkUpdate), global::Planetary.ChunkUpdate.Parser, new[]{ "ID", "Data", "X", "Y" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Packet), global::Planetary.Packet.Parser, new[]{ "Join", "Update", "Delete", "Leave", "Arbitrary", "Event", "Chunk" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Planetary.Login), global::Planetary.Login.Parser, new[]{ "Token", "GameID", "UUID", "Email", "Password" }, null, null, null)
           }));
@@ -959,11 +960,11 @@ namespace Planetary {
 
   }
 
-  public sealed partial class Chunk : pb::IMessage<Chunk> {
-    private static readonly pb::MessageParser<Chunk> _parser = new pb::MessageParser<Chunk>(() => new Chunk());
+  public sealed partial class ChunkUpdate : pb::IMessage<ChunkUpdate> {
+    private static readonly pb::MessageParser<ChunkUpdate> _parser = new pb::MessageParser<ChunkUpdate>(() => new ChunkUpdate());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Chunk> Parser { get { return _parser; } }
+    public static pb::MessageParser<ChunkUpdate> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -976,14 +977,14 @@ namespace Planetary {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Chunk() {
+    public ChunkUpdate() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Chunk(Chunk other) : this() {
+    public ChunkUpdate(ChunkUpdate other) : this() {
       iD_ = other.iD_;
       data_ = other.data_;
       x_ = other.x_;
@@ -992,8 +993,8 @@ namespace Planetary {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Chunk Clone() {
-      return new Chunk(this);
+    public ChunkUpdate Clone() {
+      return new ChunkUpdate(this);
     }
 
     /// <summary>Field number for the "ID" field.</summary>
@@ -1042,11 +1043,11 @@ namespace Planetary {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Chunk);
+      return Equals(other as ChunkUpdate);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Chunk other) {
+    public bool Equals(ChunkUpdate other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1123,7 +1124,7 @@ namespace Planetary {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Chunk other) {
+    public void MergeFrom(ChunkUpdate other) {
       if (other == null) {
         return;
       }
@@ -1298,12 +1299,12 @@ namespace Planetary {
 
     /// <summary>Field number for the "Chunk" field.</summary>
     public const int ChunkFieldNumber = 7;
-    private global::Planetary.Chunk chunk_;
+    private global::Planetary.ChunkUpdate chunk_;
     /// <summary>
     /// server side
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Planetary.Chunk Chunk {
+    public global::Planetary.ChunkUpdate Chunk {
       get { return chunk_; }
       set {
         chunk_ = value;
@@ -1453,7 +1454,7 @@ namespace Planetary {
       }
       if (other.chunk_ != null) {
         if (chunk_ == null) {
-          chunk_ = new global::Planetary.Chunk();
+          chunk_ = new global::Planetary.ChunkUpdate();
         }
         Chunk.MergeFrom(other.Chunk);
       }
@@ -1503,7 +1504,7 @@ namespace Planetary {
           }
           case 58: {
             if (chunk_ == null) {
-              chunk_ = new global::Planetary.Chunk();
+              chunk_ = new global::Planetary.ChunkUpdate();
             }
             input.ReadMessage(chunk_);
             break;
@@ -1763,4 +1764,3 @@ namespace Planetary {
 }
 
 #endregion Designer generated code
-

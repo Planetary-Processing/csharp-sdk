@@ -23,6 +23,13 @@ namespace Planetary {
     public string type;
   }
 
+  public class Chunk {
+    public ulong id;
+    public long x;
+    public long y;
+    public Dictionary<string, object> data;
+  }
+
   public class SDK {
 
     private ulong gameID;
@@ -154,7 +161,12 @@ namespace Planetary {
       }
       if (packet.Chunk != null) {
         if (chunkCallback != null) {
-          chunkCallback.Invoke(packet.Chunk);
+          chunkCallback.Invoke(new Chunk{
+            id = packet.Chunk.ID,
+            x = packet.Chunk.X,
+            y = packet.Chunk.Y,
+            data = decodeEvent(packet.Chunk.Data)
+          });
         }
       }
     }
@@ -257,4 +269,3 @@ namespace Planetary {
       }
     }
 }
-
