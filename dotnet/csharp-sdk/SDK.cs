@@ -244,7 +244,7 @@ namespace Planetary {
         case JsonValueKind.String:
           return value.GetString();
         case JsonValueKind.Object:
-          var gdDict = new Dictionary<string, object>();
+          var gdDict = new Dictionary<object, object>();
           foreach (var kvp in value.EnumerateObject()) {
             gdDict[kvp.Name] = ConvertToVariant(kvp.Value);
           }
@@ -269,3 +269,4 @@ namespace Planetary {
       }
     }
 }
+
