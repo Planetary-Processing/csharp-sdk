@@ -249,6 +249,14 @@ namespace Planetary {
             gdDict[kvp.Name] = ConvertToVariant(kvp.Value);
           }
           return gdDict;
+        case JsonValueKind.Array:
+          var gdDict2 = new Dictionary<object, object>();
+          int i = 1;
+          foreach (var v in value.EnumerateArray()) {
+            gdDict2[i] = ConvertToVariant(v);
+            i++;
+          }
+          return gdDict2;
         default:
           return null;
           }
@@ -269,4 +277,3 @@ namespace Planetary {
       }
     }
 }
-
