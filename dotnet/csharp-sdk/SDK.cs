@@ -198,7 +198,7 @@ namespace Planetary {
               {
                 string receivedMessage = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
                 Packet packet = decodePacket(receivedMessage);
-                handlePacket(packet);
+                channel.Writer.TryWrite(packet);
             }
             catch (Exception e) {
               Console.WriteLine(e);
