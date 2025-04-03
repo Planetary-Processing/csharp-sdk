@@ -6,7 +6,7 @@ await sdk.Connect("1", "1");
 sdk.Join();
 while (sdk.IsConnected()) {
     for (int i = 0; i < 5; i++) {
-        //sdk.Update();
+        sdk.Update();
         Thread.Sleep(1000/5);        
     }
     sdk.Message(new Dictionary<string, dynamic>());
