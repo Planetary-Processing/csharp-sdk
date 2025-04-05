@@ -1,4 +1,3 @@
-
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -54,8 +53,14 @@ namespace Planetary {
       gameID = gameid;
     }
 
-    public async Task Connect(string username, string password) {
-      await init(username, password, gameID);
+    public void Connect(string username, string password) {
+      
+      Thread t = new Thread(() => {
+        Task t = init(username, password, gameID);
+        t.Wait();
+    });
+      t.Start();
+      t.Join();
     }
 
     private async Task init(string email, string password, ulong gameID) {
@@ -70,7 +75,6 @@ namespace Planetary {
         // First connection
         var websocketUri = "wss://planetaryprocessing.io/_ws";
         await client.ConnectAsync(new Uri(websocketUri), CancellationToken.None);
-
         connected = true;
 
         // Creating a Login message using Protobuf
@@ -82,15 +86,17 @@ namespace Planetary {
         // Serializing the Login message to a byte array & send to server
         Byte[] dat = login.ToByteArray();
         await client.SendAsync(new ArraySegment<byte>(dat), WebSocketMessageType.Text, true, CancellationToken.None);
-
         // Wait for response and get the UUID from the message
         byte[] buffer = new byte[1024 * 4];
         WebSocketReceiveResult result = await client.ReceiveAsync(buffer, CancellationToken.None);
         if (result.MessageType == WebSocketMessageType.Text) {
           var uuid = Login.Parser.ParseFrom(buffer.Take(result.Count).ToArray()); // retrieve login message ({"UUID" : "....."})
           UUID = uuid.UUID;
+          if (string.IsNullOrEmpty(UUID))
+            {
+                throw new OperationCanceledException("Connection denied: game offline.");
+            }
         }
-
         Console.WriteLine("Websocket connected & authenticated");
         thread = new Thread(new ThreadStart(recv));
         thread.Start();
