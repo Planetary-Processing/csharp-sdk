@@ -46,7 +46,14 @@ message Packet {
 	string Arbitrary = 5; // client side
 	string Event = 6; // server side
 	ChunkUpdate Chunk = 7; // server side
+	Message Message = 8; // client side (replaces Arbitrary)
 }
+
+message Message {
+  string TargetUUID = 1;
+  string Data = 2;
+}
+
 
 message Login {
 	string Token = 1;
