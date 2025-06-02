@@ -1,0 +1,5 @@
+V:\Planetary Processing\csharp-sdk\dotnet\csharp-sdk\obj\Release\net6.0\csharp-sdk.csproj.AssemblyReference.cache
+V:\Planetary Processing\csharp-sdk\dotnet\csharp-sdk\obj\Release\net6.0\csharp-sdk.GeneratedMSBuildEditorConfig.editorconfig
+V:\Planetary Processing\csharp-sdk\dotnet\csharp-sdk\obj\Release\net6.0\csharp-sdk.AssemblyInfoInputs.cache
+V:\Planetary Processing\csharp-sdk\dotnet\csharp-sdk\obj\Release\net6.0\csharp-sdk.AssemblyInfo.cs
+V:\Planetary Processing\csharp-sdk\dotnet\csharp-sdk\obj\Release\net6.0\csharp-sdk.csproj.CoreCompileInputs.cache
