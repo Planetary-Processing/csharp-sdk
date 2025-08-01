@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\James Baker\\Documents\\Gerrit\\csharp-sdk\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj": {}
+    "V:\\Planetary Processing\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\James Baker\\Documents\\Gerrit\\csharp-sdk\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj": {
+    "V:\\Planetary Processing\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\James Baker\\Documents\\Gerrit\\csharp-sdk\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj",
+        "projectUniqueName": "V:\\Planetary Processing\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj",
         "projectName": "csharp-sdk",
-        "projectPath": "C:\\Users\\James Baker\\Documents\\Gerrit\\csharp-sdk\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj",
-        "packagesPath": "C:\\Users\\James Baker\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\James Baker\\Documents\\Gerrit\\csharp-sdk\\csharp-sdk\\dotnet\\csharp-sdk\\obj\\",
+        "projectPath": "V:\\Planetary Processing\\csharp-sdk\\dotnet\\csharp-sdk\\csharp-sdk.csproj",
+        "packagesPath": "C:\\Users\\Matthew 2\\.nuget\\packages\\",
+        "outputPath": "V:\\Planetary Processing\\csharp-sdk\\dotnet\\csharp-sdk\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\James Baker\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Matthew 2\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -75,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.205\\RuntimeIdentifierGraph.json"
         }
       }
     }

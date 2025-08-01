@@ -47,6 +47,9 @@ namespace Planetary {
         private Action<Chunk> chunkCallback;
         private Action<Dictionary<String, object>> eventCallback;
         private ConcurrentQueue<Packet> packetQueue = new ConcurrentQueue<Packet>();
+        private ConcurrentQueue<Packet> sendQueue = new ConcurrentQueue<Packet>();
+        private Thread sendThread;
+        private AutoResetEvent sendSignal = new AutoResetEvent(false);
 
         private Mutex m = new Mutex();
         public readonly Dictionary<string, Entity> entities = new Dictionary<string, Entity>();
@@ -117,6 +120,9 @@ namespace Planetary {
                 connected = true;
                 thread = new Thread(new ThreadStart(recv));
                 thread.Start();
+                
+                sendThread = new Thread(new ThreadStart(sendQueueLoop));
+                sendThread.Start();
                 Thread.Sleep(1000);
                 
 
@@ -210,22 +216,11 @@ namespace Planetary {
         }
 
         private void send(Packet packet) {
-            if (connected == false) {
+            if (!connected) {
                 throw new Exception("send called before connection is established");
             }
-            m.WaitOne();
-            try {
-                Console.WriteLine("Attempting Send");
-                Byte[] bts = encodePacket(packet);
-                stream.Write(bts, 0, bts.Length);
-              Console.WriteLine("Send completed successfully.");
-            } catch (Exception e) {
-                Console.WriteLine("error in send!");
-                Console.WriteLine(e.ToString());
-                connected = false;
-            } finally {
-                m.ReleaseMutex();
-            }
+            sendQueue.Enqueue(packet);
+            sendSignal.Set();
         }
 
         // Thread for getting comms from server
@@ -275,7 +270,7 @@ namespace Planetary {
                 case JTokenType.Boolean:
                     return value.ToObject<bool>();
                 case JTokenType.Integer:
-                    return value.ToObject<long>(); 
+                    return value.ToObject<long>();    
                 case JTokenType.Float:
                     return value.ToObject<double>();
                 case JTokenType.String:
@@ -342,8 +337,25 @@ namespace Planetary {
                   }
               }
           }).Start();
-      }
+        }
 
+        private void sendQueueLoop() {
+            while (connected) {
+                sendSignal.WaitOne();
+                while (sendQueue.TryDequeue(out var packet)) {
+                    m.WaitOne();
+                    try {
+                        Byte[] bts = encodePacket(packet);
+                        stream.Write(bts, 0, bts.Length);
+                    } catch (Exception e) {
+                        Console.WriteLine("error in send!");
+                        Console.WriteLine(e.ToString());
+                        connected = false;
+                    } finally {
+                        m.ReleaseMutex();
+                    }
+                }
+            }
+        }
     }
-
 }
